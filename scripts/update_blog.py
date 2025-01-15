@@ -1,7 +1,6 @@
 import feedparser
 import git
 import os
-#
 
 # 벨로그 RSS 피드 URL
 # example : rss_url = 'https://api.velog.io/rss/@rimgosu'
@@ -20,10 +19,8 @@ if not os.path.exists(posts_dir):
 # 레포지토리 로드
 repo = git.Repo(repo_path)
 
-
 # RSS 피드 파싱
 feed = feedparser.parse(rss_url)
-
 
 # 각 글을 파일로 저장하고 커밋
 for entry in feed.entries:
@@ -35,17 +32,10 @@ for entry in feed.entries:
     file_name += '.md'
     file_path = os.path.join(posts_dir, file_name)
 
-    # 파일에 글 작성
-with open('blog_entries.txt', 'w', encoding='utf-8') as file:
-    for entry in feed.entries:
-        # description, summary, content 중 사용 가능한 것을 선택
-        content = entry.get('description', entry.get('summary', '내용이 없습니다.'))
-        file.write(content + '\n')
-    
     # 파일이 이미 존재하지 않으면 생성
-   # if not os.path.exists(file_path):
-    #    with open(file_path, 'w', encoding='utf-8') as file:
-    #        file.write(entry.description)  # 글 내용을 파일에 작성
+    if not os.path.exists(file_path):
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(entry.description)  # 글 내용을 파일에 작성
 
         # 깃허브 커밋
         repo.git.add(file_path)
